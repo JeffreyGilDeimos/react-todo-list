@@ -10,19 +10,33 @@ export default function TodoList() {
       return;
     }
     const newTodos = [newTodo, ...todos];
+    setTodos(newTodos);
+  };
 
+  const removeTodo = (id) => {
+    const newTodos = [...todos].filter((todo) => todo.id !== id);
+    setTodos(newTodos);
+  };
+
+  const updateTodo = (todoID, newValue) => {
+    if (!newValue) {
+      return;
+    }
+    const newTodos = todos.map((item) =>
+      item.id === todoID ? newValue : item
+    );
     setTodos(newTodos);
   };
 
   return (
     <header>
       <h1>Task List 2022</h1>
-      <TodoHeader addTodo={addTodo} />
+      <TodoHeader onSubmit={addTodo} />
       <br />
       <hr />
       <br />
       <br />
-      <TodoBody todos={todos} />
+      <TodoBody todos={todos} removeTodo={removeTodo} updateTodo={updateTodo} />
     </header>
   );
 }

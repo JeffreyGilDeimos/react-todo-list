@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-export default function TodoHeader({ addTodo }) {
-  const [input, setInput] = useState("");
+export default function TodoHeader({ edit, onSubmit }) {
+  const [input, setInput] = useState(edit ? edit.value : "");
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    inputRef.current.focus();
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    addTodo({
-      id: Math.floor(Math.random() * 1000000),
+    onSubmit({
+      id: Math.floor(Math.random() * 100000),
       text: input,
     });
     setInput("");
@@ -14,19 +20,38 @@ export default function TodoHeader({ addTodo }) {
 
   return (
     <form onSubmit={handleSubmit} className="new-task-form">
-      <div>
-        <input
-          id="new-task-input"
-          type="text"
-          value={input}
-          name="text"
-          className="todo-input"
-          placeholder="What do you have planned?"
-          style={{ width: "600px" }}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <button id="new-task-submit">Add todo</button>
-      </div>
+      {edit ? (
+        <div>
+          <input
+            id="new-task-input"
+            value={input}
+            ref={inputRef}
+            onChange={(e) => setInput(e.target.value)}
+            name="text"
+            className="todo-input edit"
+            placeholder="What do you have planned?"
+            style={{ width: "600px" }}
+          />
+          <button id="new-task-submit" onClick={handleSubmit}>
+            Update todo
+          </button>
+        </div>
+      ) : (
+        <div>
+          <input
+            id="new-task-input"
+            type="text"
+            value={input}
+            ref={inputRef}
+            onChange={(e) => setInput(e.target.value)}
+            name="text"
+            className="todo-input edit"
+            placeholder="What do you have planned?"
+            style={{ width: "600px" }}
+          />
+          <button id="new-task-submit">Add todo</button>
+        </div>
+      )}
     </form>
   );
 }
